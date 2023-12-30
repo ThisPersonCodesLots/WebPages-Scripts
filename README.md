@@ -12,6 +12,6 @@ Use git to clone the repository to your local machine. Then, use the Tampermonke
 
 ## References
 
+- [Violentmonkey](https://violentmonkey.github.io/)
+
 - [Tampermonkey](https://www.tampermonkey.net/)
-- [Tampermonkey - Chrome Web Store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-- [Tampermonkey - Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
