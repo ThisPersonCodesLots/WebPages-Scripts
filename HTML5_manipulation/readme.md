@@ -1,13 +1,13 @@
 # HTML5 Video Speed Control
 
-This is a userscript for controlling the playback speed of HTML5 videos on any website.
+This is a userscript for controlling the playback of HTML5 videos on any website.
 
 ## Features
 
 - Decrease video speed by 0.05 (press '[')
 - Increase video speed by 0.05 (press ']')
 - Reset video speed to 1 (press 'r')
-- Displays the current speed on the video for 10 seconds after a change
+- Changing the video saturation
 
 ## Installation
 
@@ -21,3 +21,6 @@ This script is designed to be used with a userscript manager like Tampermonkey o
 ## Usage
 
 Once installed, the script will automatically run on any website. To control the video speed, simply press the appropriate keys ('[', ']', or 'r') while a video is playing.
+
+## Pull Requests
+If you have any suggestions or improvements, feel free to submit a pull request.
