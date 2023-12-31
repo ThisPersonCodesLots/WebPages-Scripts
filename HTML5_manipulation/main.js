@@ -10,15 +10,42 @@
 
 let video;
 // Speed of the video
-let videoSpeed = 1;
+let videoSpeed = 1; // 1 = 1.00x (default)
 let speedDisplay;
 // Saturation of the video
-let videoSaturation = 1;
+let videoSaturation = 1; // 1 = 100% (default)
+let oldVideoSaturation = 1;
 let videoSaturationDisplay;
+// Constants
+const MIN_RATE = 0;
+const MAX_RATE = 5;
+const RATE_STEP = 0.05;
+const MIN_SATURATION = 0;
+const MAX_SATURATION = 2;
+const SATURATION_STEP = 0.1;
 
 document.addEventListener("playing", registerShortcutKeys, { capture: true, once: true });
 document.addEventListener("playing", restoreSpeed, { capture: true });
 document.addEventListener("play", captureActiveVideoElement, true);
+
+// Reset all the video settings to default
+function resetVideoSettings() {
+  if (video) {
+    video.playbackRate = 1;
+    video.style.filter = 'none';
+    video = null;
+  }
+  if (speedDisplay) {
+    speedDisplay.remove();
+    speedDisplay = null;
+  }
+  if (videoSaturationDisplay) {
+    videoSaturationDisplay.remove();
+    videoSaturationDisplay = null;
+  }
+  videoSpeed = 1;
+  videoSaturation = 1;
+}
 
 function createSpeedDisplay(video) {
   speedDisplay = document.createElement('div');
@@ -39,14 +66,14 @@ function createSpeedDisplay(video) {
 
 function createSaturationDisplay(video) {
   videoSaturationDisplay = document.createElement('div');
-  videoSaturationDisplay.textContent = `Saturation: ${videoSaturation.toFixed(2)}`;
   Object.assign(videoSaturationDisplay.style, {
-    position: 'fixed',
-    top: '50px',
+    position: 'absolute',
+    top: '40px',
     left: '10px',
-    backgroundColor: 'black',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'lightcoral',
     padding: '5px',
+    borderRadius: '5px',
     zIndex: '2147483647',
     opacity: '0'
   });
@@ -62,38 +89,46 @@ function registerShortcutKeys(event) {
 function restoreSpeed(event) {
   if (event.target.playbackRate !== videoSpeed) event.target.playbackRate = videoSpeed;
 }
-
+// Handle key press
 function handlePressedKey(event) {
   const target = event.target;
   if (target.localName === "input" || target.localName === "textarea" || target.isContentEditable) return;
 
-  const key = event.key;
   let newRate = video.playbackRate;
-  // decrease video speed by 0.5
-  if (key === "[") newRate = Math.max(0, video.playbackRate - 0.05);
-  // increase video speed by 0.5
-  else if (key === "]") newRate = Math.min(5, video.playbackRate + 0.05);
-  // reset video speed to 1
-  else if (key === "r") newRate = 1;
-  // increase saturation by 10%
-  else if (key === "+") videoSaturation = Math.min(4, videoSaturation + 0.1);
-  // decrease saturation by 10%
-  else if (key === "-") videoSaturation = Math.max(0, videoSaturation - 0.1);
+  switch (event.key) {
+    case "[":
+      newRate = Math.max(MIN_RATE, video.playbackRate - RATE_STEP);
+      break;
+    case "]":
+      newRate = Math.min(MAX_RATE, video.playbackRate + RATE_STEP);
+      break;
+    case "'":
+      videoSaturation = Math.min(MAX_SATURATION, videoSaturation + SATURATION_STEP);
+      break;
+    case ";":
+      videoSaturation = Math.max(MIN_SATURATION, videoSaturation - SATURATION_STEP);
+      break;
+    case "+":
+      resetVideoSettings();
+      break;
+  }
 
   if (newRate !== video.playbackRate) {
     video.playbackRate = newRate;
     videoSpeed = newRate;
     speedDisplay.textContent = `Speed: ${videoSpeed.toFixed(2)}`;
     speedDisplay.style.opacity = '1';
-    setTimeout(() => speedDisplay.style.opacity = '0', 10000);
+    setTimeout(() => speedDisplay.style.opacity = '0', 5000);
   }
 
-  // Apply saturation filter
-  if (videoSaturation !== 1) {
-    video.style.filter = `saturate(${videoSaturation * 100}%)`;
-    videoSaturationDisplay.textContent = `Saturation: ${(videoSaturation * 100).toFixed(0)}%`;
+  if (videoSaturation !== oldVideoSaturation) {
+    video.style.filter = `saturate(${videoSaturation})`;
+    videoSaturationDisplay.textContent = `Saturation: ${videoSaturation.toFixed(2)}`;
     videoSaturationDisplay.style.opacity = '1';
     setTimeout(() => videoSaturationDisplay.style.opacity = '0', 5000);
+    oldVideoSaturation = videoSaturation;
+  } else {
+    videoSaturationDisplay.style.opacity = '0';
   }
 }
 
