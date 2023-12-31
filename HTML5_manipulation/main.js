@@ -102,15 +102,19 @@ function handlePressedKey(event) {
     case "]":
       newRate = Math.min(MAX_RATE, video.playbackRate + RATE_STEP);
       break;
-    case "'":
-      videoSaturation = Math.min(MAX_SATURATION, videoSaturation + SATURATION_STEP);
-      break;
     case ";":
       videoSaturation = Math.max(MIN_SATURATION, videoSaturation - SATURATION_STEP);
       break;
+    case "'":
+      videoSaturation = Math.min(MAX_SATURATION, videoSaturation + SATURATION_STEP);
+      break;
+    // Reset all the video settings to default
     case "+":
       resetVideoSettings();
       break;
+    // If any other key is pressed, do nothing/exit the function
+    default:
+      return;
   }
 
   if (newRate !== video.playbackRate) {
