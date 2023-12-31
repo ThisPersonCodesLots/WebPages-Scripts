@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         HTML5 VIDEO SPEED
+// @name         HTML5 Enchantment
 // @namespace    Violentmonkey Scripts
 // @description  Video speed control for HTML5 videos on all websites.
-// @version      1.2
+// @version      1.3
 // @author       You
 // @match        *://*/*
 // @grant        none
