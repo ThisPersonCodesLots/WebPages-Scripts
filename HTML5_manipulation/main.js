@@ -64,7 +64,11 @@ function createSpeedDisplay(video) {
     opacity: '0'
   });
   video.parentNode.appendChild(speedDisplay);
-  setTimeout(() => speedDisplay.style.opacity = '0', 1000);
+  setTimeout(() => {
+    if (speedDisplay.style.opacity !== '1') {
+      speedDisplay.style.opacity = '0'
+    }
+  }, 1000);
 }
 
 function createSaturationDisplay(video) {
@@ -81,7 +85,11 @@ function createSaturationDisplay(video) {
     opacity: '0'
   });
   video.parentNode.appendChild(videoSaturationDisplay);
-  setTimeout(() => videoSaturationDisplay.style.opacity = '0', 1000);
+  setTimeout(() => {
+    if (videoSaturationDisplay.style.opacity !== '1') {
+      videoSaturationDisplay.style.opacity = '0'
+    }
+  }, 1000);
 }
 
 function registerShortcutKeys(event) {
@@ -125,22 +133,28 @@ function handlePressedKey(event) {
     videoSpeed = newRate;
     speedDisplay.textContent = `Speed: ${videoSpeed.toFixed(2)}`;
     speedDisplay.style.opacity = '1';
-    setTimeout(() => speedDisplay.style.opacity = '0', 1000);
     // Clear previous timeout
     clearTimeout(speedDisplayTimeout);
-    // Keep the reference of new timeout
-    speedDisplayTimeout = setTimeout(() => speedDisplay.style.opacity  = '0', 1000);
+    // Set up new timeout
+    speedDisplayTimeout = setTimeout(() => {
+      if (speedDisplay.style.opacity !== '0') {
+        speedDisplay.style.opacity = '0'
+      }
+    }, 1000);
   }
 
   if (videoSaturation !== oldVideoSaturation) {
     video.style.filter = `saturate(${videoSaturation})`;
     videoSaturationDisplay.textContent = `Saturation: ${videoSaturation.toFixed(2)}`;
     videoSaturationDisplay.style.opacity = '1';
-    setTimeout(() => videoSaturationDisplay.style.opacity = '0', 1000);
+    clearTimeout(videoSaturationDisplayTimeout);
+    // Set up new timeout
+    videoSaturationDisplayTimeout = setTimeout(() => {
+      if (videoSaturationDisplay.style.opacity !== '0') {
+        videoSaturationDisplay.style.opacity = '0'
+      }
+    }, 1000);
     oldVideoSaturation = videoSaturation;
-
-    clearTimeout(videoSaturationDisplayTimeout); // Clear previous timeout
-    videoSaturationDisplayTimeout = setTimeout(() => videoSaturationDisplay.style.opacity = '0', 1000); // Keep reference of new timeout
   } else {
     videoSaturationDisplay.style.opacity = '0';
   }
